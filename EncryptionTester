@@ -1,0 +1,19 @@
+package lab12pack;
+
+
+public class EncryptionTester {
+
+    public static void main(String[] args) throws Exception {
+        String encryptedFilePath = "C:\\Users\\moyee\\OneDrive\\Desktop\\New folder\\encrypted.txt";
+        String decryptedFilePath = "C:\\Users\\moyee\\OneDrive\\Desktop\\New folder\\decrypted.txt";
+        String inputFilePath = "C:\\Users\\moyee\\OneDrive\\Desktop\\New folder\\encryptMe.txt";
+        String outputFilePath = "C:\\Users\\moyee\\OneDrive\\Desktop\\New folder\\newEncrypted.txt";
+
+        int shift = 3; // Says how much you would like to shift
+
+        Encrypter enc = new Encrypter(shift);
+
+        enc.encrypt(inputFilePath, outputFilePath);
+        enc.decrypt(encryptedFilePath, decryptedFilePath);
+    }
+}
