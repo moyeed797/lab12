@@ -1,0 +1,135 @@
+package lab12pack;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Encrypter {
+
+    private int shift;
+    private String encrypted;
+
+    /**
+     * Default Constructor
+     */
+    public Encrypter() {
+        this.shift = 1;
+        this.encrypted = "";
+    }
+
+    /**
+     * Non-default Constructor
+     *
+     * @param s - custom shift amount
+     */
+    public Encrypter(int s) {
+        this.shift = s;
+        this.encrypted = "";
+    }
+
+    /**
+     * Encrypts the content of a file and writes the result to another file.
+     *
+     * @param inputFilePath      the path to the file containing the text to be encrypted
+     * @param encryptedFilePath the path to the file where the encrypted text will be written
+     * @throws Exception if an error occurs while reading or writing the files
+     */
+    public void encrypt(String inputFilePath, String encryptedFilePath) throws Exception {
+        // Call the read method, encrypt the file contents, and then write to a new file
+        String message = readFile(inputFilePath);
+        String encryptedMessage = encryptText(message, shift);
+        writeFile(encryptedMessage, encryptedFilePath);
+    }
+
+    /**
+     * Decrypts the content of an encrypted file and writes the result to another file.
+     *
+     * @param encryptedFilePath    the path to the file containing the encrypted text
+     * @param decryptedFilePath the path to the file where the decrypted text will be written
+     * @throws Exception if an error occurs while reading or writing the files
+     */
+    public void decrypt(String encryptedFilePath, String decryptedFilePath) throws Exception {
+        // Call the read method, decrypt the file contents, and then write to a new file
+        String encryptedMessage = readFile(encryptedFilePath);
+        String decryptedMessage = decryptText(encryptedMessage, shift);
+        writeFile(decryptedMessage, decryptedFilePath);
+    }
+
+    /**
+     * Reads the content of a file and returns it as a string.
+     *
+     * @param filePath the path to the file to be read
+     * @return the content of the file as a string
+     * @throws Exception if an error occurs while reading the file
+     */
+    private static String readFile(String filePath) throws Exception {
+        StringBuilder content = new StringBuilder();
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNextLine()) {
+                content.append(scanner.nextLine());
+                if (scanner.hasNextLine()) {
+                    content.append(System.lineSeparator()); // Use system-specific newline separator
+                }
+            }
+        }
+        return content.toString();
+    }
+
+
+    /**
+     * Writes data to a file.
+     *
+     * @param data     the data to be written to the file
+     * @param filePath the path to the file where the data will be written
+     */
+    private static void writeFile(String data, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Encrypts text using the Caesar cipher with the given shift.
+     *
+     * @param text  the text to be encrypted
+     * @param shift the shift value for the Caesar cipher
+     * @return the encrypted text
+     */
+    private static String encryptText(String text, int shift) {
+        StringBuilder result = new StringBuilder();
+        for (char character : text.toCharArray()) {
+            if (Character.isLetter(character)) {
+                char base = Character.isUpperCase(character) ? 'A' : 'a';
+                result.append((char) ((character - base + shift) % 26 + base));
+            } else {
+                result.append(character);
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * Decrypts text encrypted with the Caesar cipher and the given shift.
+     *
+     * @param encryptedText the text to be decrypted
+     * @param shift         the shift value for the Caesar cipher
+     * @return the decrypted text
+     */
+    private static String decryptText(String encryptedText, int shift) {
+        return encryptText(encryptedText, 26 - shift); // Decryption is the same as encryption with a shift of 26 - shift
+    }
+
+    /**
+     * Returns a string representation of the encrypted text.
+     *
+     * @return the encrypted text
+     */
+    @Override
+    public String toString() {
+       return encrypted;
+}
+}
